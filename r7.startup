@@ -17,6 +17,13 @@ echo "150.0.0.250 s2" >> /etc/hosts
 echo "150.0.0.100 pc2" >> /etc/hosts
 
 route add -net 192.168.0.0/24 gw 200.0.0.8 
-route add -net 100.0.0.0/24 gw 200.0.0.8  
+#route add -net 100.0.0.0/24 gw 200.0.0.8  
 
-route add -net 150.0.0.0/24 gw 150.0.1.1
+#ip route add 193.201.28.0/23 via 200.0.0.8
+
+#route add -net 150.0.0.0/24 gw 150.0.1.1
+
+ip route add 100.0.0.0/24 via 200.0.0.8
+
+ip route add 150.0.0.0/24 via 150.0.1.1
+

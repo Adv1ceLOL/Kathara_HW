@@ -1,5 +1,7 @@
 /etc/init.d/networking restart
 
+/etc/init.d/openvpn start
+
 echo "192.168.0.100 pc1" >> /etc/hosts
 echo "192.168.0.1 r1" >> /etc/hosts
 echo "100.0.0.1 r2" >> /etc/hosts

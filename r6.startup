@@ -20,6 +20,9 @@ route add -net 192.168.0.0/24 gw 200.0.0.6
 route add -net 150.0.0.0/16 gw 200.0.0.5 
 route add -net 100.0.0.0/24 gw 200.0.0.6
 
+# Add route to VPN subnet
+ip route add 10.0.0.0/24 via 192.168.0.100
+
 # 5 NAT
 # Enable IP forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -38,7 +41,6 @@ iptables -A FORWARD -i eth3 -o eth1 -j ACCEPT
 iptables -A FORWARD -i eth3 -o eth2 -j ACCEPT
 
 # 6 Firewall
-# Clear existing filter rules
 iptables -F
 
 # Allow established and related connections
@@ -49,3 +51,16 @@ iptables -A FORWARD -i eth3 -s 192.168.0.0/24 -j ACCEPT
 
 # Block all other traffic to private subnet
 iptables -A FORWARD -d 192.168.0.0/24 -j DROP
+
+#openvpn --config client_1.conf
+
+# Allow OpenVPN traffic BEFORE drop rule
+iptables -A FORWARD -p tcp --dport 7000 -d 192.168.0.100 -j ACCEPT
+iptables -A FORWARD -p tcp --sport 7000 -s 192.168.0.100 -j ACCEPT
+
+# NAT and port forwarding
+iptables -t nat -A PREROUTING -p tcp --dport 7000 -j DNAT --to-destination 192.168.0.100:7000
+iptables -t nat -A POSTROUTING -o eth3 -j MASQUERADE
+
+# Block rule comes after
+#iptables -A FORWARD -d 192.168.0.0/24 -j DROP
