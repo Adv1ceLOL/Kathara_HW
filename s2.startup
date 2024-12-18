@@ -1,0 +1,38 @@
+/etc/init.d/networking restart
+
+echo "192.168.0.100 pc1" >> /etc/hosts
+echo "192.168.0.1 r1" >> /etc/hosts
+echo "100.0.0.1 r2" >> /etc/hosts
+echo "100.0.0.3 r3" >> /etc/hosts
+
+echo "192.168.0.100 s1" >> /etc/hosts
+
+echo "150.0.0.250 s2" >> /etc/hosts
+echo "150.0.0.100 pc2" >> /etc/hosts
+
+# 8 SSH server
+apt-get update
+apt-get install -y openssh-server
+
+# Create user without password
+useradd -m -s /bin/bash myuser2
+passwd -d myuser2  # Delete password
+
+# SSH directory setup
+mkdir -p /home/myuser2/.ssh
+touch /home/myuser2/.ssh/authorized_keys
+
+# Configure SSH for key auth only
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+sed -i 's/#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+
+# Set permissions
+chmod 700 /home/myuser2/.ssh
+chmod 600 /home/myuser2/.ssh/authorized_keys
+chown -R myuser2:myuser2 /home/myuser2
+
+# Add pc1's public key
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDSoq3KL5ijfsT8GOvk7GB/1LO1ev1UOS3U8SliMPRZwElAo3em9eFfXO5swrzeS8thnXH/wb68QR+f8i7Dld80S56Eb0zweMQHal1SY0Fmbm6OKSAwZMbhLItxZFZBiqcdNRDKWMIqqS1uYmdwERUn5FmMSsd6vZhcpoQlX3WEcV3VveB6AT8rIm1V5TAC5ZEiekc5egb7f5oMhfo+OvhLJQKsglKNu5p62sqBjdgvDKhQ5C+f9nw1A3cYDxmuMvIVJcjYaoobQ1QS7Z8QJ1/gY3GRawMHBpkMvHC2RAk/tTbB5hauHKX6OvlnGPY4EM1D/axrqzEPCkIAUt1ZXUMRK3Uh4rLRh/D+/4bEj240V2avTkbPXS07H9li+BueQDpeBWOZqIUAHwZNdQjD/9mHaTv0o6kuNTXlbYXPRWu6+V6UPhvKJ2fk3mfoVuZzuE5UkL3M0PCSSABZtFmljudXfg0F9p5q0PDHu8lMGXWL9/ZVyW2hWmoGnFgMVkACOB/QT+4ARvh6bI1nBIuFqRmhrqb5pwlG/LDGigXukeW0do6dwSvy60FqTorvkyLABT4rUOGHKwp4kBqa6dZF4HaD6gCxAzCos2lghxGObIdmhXCjM7SDVLnXz/3aeiqNvQxlJRzh2WwrlNwvCL2BI61VWc5UfNWEZ5cMstIKSJ22Pw== root@pc1" > /home/myuser2/.ssh/authorized_keys
+
+# Restart SSH service
+/etc/init.d/ssh restart

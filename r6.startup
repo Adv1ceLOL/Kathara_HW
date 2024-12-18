@@ -1,0 +1,51 @@
+/etc/init.d/networking restart
+
+chmod 644 /etc/quagga/*.conf
+
+# Start routing daemons
+/etc/init.d/zebra start
+/etc/init.d/ospfd start
+
+echo "192.168.0.100 pc1" >> /etc/hosts
+echo "192.168.0.1 r1" >> /etc/hosts
+echo "100.0.0.1 r2" >> /etc/hosts
+echo "100.0.0.3 r3" >> /etc/hosts
+
+echo "192.168.0.100 s1" >> /etc/hosts
+
+echo "150.0.0.250 s2" >> /etc/hosts
+echo "150.0.0.100 pc2" >> /etc/hosts
+
+route add -net 192.168.0.0/24 gw 200.0.0.6
+route add -net 150.0.0.0/16 gw 200.0.0.5 
+route add -net 100.0.0.0/24 gw 200.0.0.6
+
+# 5 NAT
+# Enable IP forwarding
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Clear existing NAT rules
+iptables -t nat -F
+
+# NAT for s1's network (192.168.0.0/24) using SNAT with specific IPs
+iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth0 -j SNAT --to 200.0.0.7
+iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth1 -j SNAT --to 200.0.0.10
+iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth2 -j SNAT --to 200.0.0.4
+
+# Add FORWARD rules
+iptables -A FORWARD -i eth3 -o eth0 -j ACCEPT
+iptables -A FORWARD -i eth3 -o eth1 -j ACCEPT
+iptables -A FORWARD -i eth3 -o eth2 -j ACCEPT
+
+# 6 Firewall
+# Clear existing filter rules
+iptables -F
+
+# Allow established and related connections
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow outbound traffic from private subnet
+iptables -A FORWARD -i eth3 -s 192.168.0.0/24 -j ACCEPT
+
+# Block all other traffic to private subnet
+iptables -A FORWARD -d 192.168.0.0/24 -j DROP

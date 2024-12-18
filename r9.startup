@@ -1,0 +1,23 @@
+/etc/init.d/networking restart
+
+chmod 644 /etc/quagga/*.conf
+
+# Start routing daemons
+/etc/init.d/zebra start
+/etc/init.d/ospfd start
+
+echo "192.168.0.100 pc1" >> /etc/hosts
+echo "192.168.0.1 r1" >> /etc/hosts
+echo "100.0.0.1 r2" >> /etc/hosts
+echo "100.0.0.3 r3" >> /etc/hosts
+
+echo "192.168.0.100 s1" >> /etc/hosts
+
+echo "150.0.0.250 s2" >> /etc/hosts
+echo "150.0.0.100 pc2" >> /etc/hosts
+
+route add -net 192.168.0.0/24 gw 150.0.1.0  
+route add -net 100.0.0.0/24 gw 150.0.1.0   
+
+ip route add 150.0.0.0/24 dev eth1
+

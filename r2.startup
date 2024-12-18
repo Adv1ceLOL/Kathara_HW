@@ -1,0 +1,18 @@
+/etc/init.d/networking restart
+
+echo "192.168.0.100 pc1" >> /etc/hosts
+echo "192.168.0.1 r1" >> /etc/hosts
+echo "100.0.0.1 r2" >> /etc/hosts
+echo "100.0.0.3 r3" >> /etc/hosts
+
+echo "192.168.0.100 s1" >> /etc/hosts
+
+echo "150.0.0.250 s2" >> /etc/hosts
+echo "150.0.0.100 pc2" >> /etc/hosts
+
+route add -net 100.0.0.4/31 via 100.0.0.5 dev eth1
+
+route add -net 192.168.0.0/24 gw 100.0.0.0 
+route add -net 200.0.0.0/24 gw 100.0.0.5    
+route add -net 150.0.0.0/16 gw 100.0.0.5    
+route add -net 192.201.28.0/23 gw 100.0.0.5 
