@@ -12,3 +12,6 @@ echo "192.168.0.100 s1" >> /etc/hosts
 echo "150.0.0.250 s2" >> /etc/hosts
 echo "150.0.0.100 pc2" >> /etc/hosts
 
+mkdir -p /dev/net
+mknod /dev/net/tun c 10 200
+chmod 600 /dev/net/tun

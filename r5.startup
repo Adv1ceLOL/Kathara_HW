@@ -20,7 +20,7 @@ echo "150.0.0.250 s2" >> /etc/hosts
 echo "150.0.0.100 pc2" >> /etc/hosts
 
 
-ip route add 150.0.0.0/24 via 200.0.0.9
+ip route add 150.0.0.0/16 via 200.0.0.9
 #ip route add 200.0.0.0/24 via 200.0.0.0
 
 #ip route add 200.0.0.0/24 via 200.0.0.0 dev eth1

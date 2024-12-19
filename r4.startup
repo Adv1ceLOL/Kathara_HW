@@ -19,10 +19,10 @@ echo "192.168.0.100 s1" >> /etc/hosts
 echo "150.0.0.250 s2" >> /etc/hosts
 echo "150.0.0.100 pc2" >> /etc/hosts
 
-ip route add 100.0.0.0/31 via 100.0.0.8 dev eth0
-ip route add 100.0.0.2/31 via 100.0.0.8 dev eth0
-ip route add 192.168.0.0/24 via 100.0.0.8 dev eth0
-ip route add 100.0.0.0/31 via 100.0.0.4 dev eth1
+ip route add 100.0.0.0/31 via 100.0.0.8 dev eth1
+ip route add 100.0.0.2/31 via 100.0.0.8 dev eth1
+ip route add 192.168.0.0/24 via 100.0.0.8 dev eth1
+ip route add 100.0.0.0/31 via 100.0.0.4 dev eth0
 ip route add 100.0.0.2/31 via 100.0.0.6 dev eth2
 
 
