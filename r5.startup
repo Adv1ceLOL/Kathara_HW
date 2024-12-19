@@ -1,30 +1,22 @@
 /etc/init.d/networking restart
 
-#chmod 644 /etc/quagga/*.conf
+systemctl restart frr
 
-# Start routing daemons
-#/etc/init.d/zebra start
-#/etc/init.d/ospfd start
-#/etc/init.d/bgpd start
-
-systemctl start frr
-
+# Add hosts
 echo "192.168.0.100 pc1" >> /etc/hosts
 echo "192.168.0.1 r1" >> /etc/hosts
 echo "100.0.0.1 r2" >> /etc/hosts
 echo "100.0.0.3 r3" >> /etc/hosts
-
 echo "192.168.0.100 s1" >> /etc/hosts
-
 echo "150.0.0.250 s2" >> /etc/hosts
 echo "150.0.0.100 pc2" >> /etc/hosts
 
+# Enable IP forwarding
+sysctl -w net.ipv4.ip_forward=1
 
 ip route add 150.0.0.0/16 via 200.0.0.9
-#ip route add 200.0.0.0/24 via 200.0.0.0
+ip route add 192.168.0.0/24 via 193.201.28.0
 
+#ip route add 200.0.0.0/24 via 200.0.0.0
 #ip route add 200.0.0.0/24 via 200.0.0.0 dev eth1
 #ip route add 150.0.0.0/16 via 200.0.0.9 dev eth2
-
-#route add -net 192.168.0.0/24 gw 192.201.28.0  
-#route add -net 100.0.0.0/8 gw 192.201.28.0

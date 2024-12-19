@@ -7,7 +7,7 @@
 #/etc/init.d/zebra start
 #/etc/init.d/bgpd start
 
-systemctl start frr
+systemctl restart frr
 
 echo "192.168.0.100 pc1" >> /etc/hosts
 echo "192.168.0.1 r1" >> /etc/hosts
@@ -25,10 +25,4 @@ ip route add 192.168.0.0/24 via 100.0.0.8 dev eth1
 ip route add 100.0.0.0/31 via 100.0.0.4 dev eth0
 ip route add 100.0.0.2/31 via 100.0.0.6 dev eth2
 
-
-#route add -net 100.0.0.8/31 via 100.0.0.8 dev eth1
-
-#route add -net 192.168.0.0/24 gw 100.0.0.8
-#route add -net 100.0.0.0/31 gw 100.0.0.8 
-#route add -net 100.0.0.2/31 gw 100.0.0.8   
-
+#! 12 Firewall blocking traffic not SSH

@@ -21,7 +21,7 @@ route add -net 150.0.0.0/16 gw 200.0.0.5
 route add -net 100.0.0.0/24 gw 200.0.0.6
 
 # Add route to VPN subnet
-ip route add 10.0.0.0/24 via 192.168.0.100
+#ip route add 10.0.0.0/24 via 192.168.0.100
 
 sysctl -w net.ipv4.ip_forward=1
 
