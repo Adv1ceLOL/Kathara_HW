@@ -25,4 +25,17 @@ ip route add 192.168.0.0/24 via 100.0.0.8 dev eth1
 ip route add 100.0.0.0/31 via 100.0.0.4 dev eth0
 ip route add 100.0.0.2/31 via 100.0.0.6 dev eth2
 
-#! 12 Firewall blocking traffic not SSH
+#! 12 Firewall blocking traffic not SSH (Disable this to make VPN work)
+
+iptables -P FORWARD DROP  # Set default policy to DROP
+
+# Allow SSH traffic (port 22)
+iptables -A FORWARD -p tcp --dport 22 -j ACCEPT
+iptables -A FORWARD -p tcp --sport 22 -j ACCEPT
+
+# Allow established connections
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Block everything else (including OpenVPN traffic on port 7000)
+iptables -P FORWARD DROP
+
